@@ -11,8 +11,19 @@ struct ContentView: View {
     @State private var animationValue = 1.0
     @State private var degree = 0.0
     @State private var color = Color(.black)
+    @State private var enabled = false
     var body: some View {
         VStack{
+            
+            Button("Tap me"){
+                enabled.toggle()
+            }.frame(width: 200, height: 200)
+                .background(enabled ? .blue : .red)
+                .animation(nil, value: enabled)
+                .foregroundStyle(.white)
+                .clipShape(.rect(cornerRadius: enabled ? 60 : 0))
+                .animation(.spring(duration: 1, bounce: 0.6), value: enabled)
+            
             
             Button("Tap me"){
                 degree = 360.0
