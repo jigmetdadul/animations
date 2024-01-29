@@ -8,52 +8,35 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var animationValue = 1.0
-    @State private var degree = 0.0
-    @State private var color = Color(.black)
-    @State private var enabled = false
+    @State private var gradientCol = false
+    @State private var dragAmount = CGSize.zero
     var body: some View {
-        VStack{
+        LinearGradient(colors: [ gradientCol ? .purple : .green, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
+            .frame(width: 300, height: 200)
+            .clipShape(.rect(cornerRadius: 20))
+            .offset(dragAmount)
+            .gesture(
+                DragGesture()
+                    .onChanged({dragSize in
+                        
+                            dragAmount = dragSize.translation
+                        
+                       
+                    })
+                    .onEnded({ _ in
+                        if(gradientCol){
+                            gradientCol = false
+                        }else{
+                            gradientCol = true
+                        }
+                        withAnimation(.bouncy) {
+                            dragAmount = .zero
+                        }
+                       
+                    })
+            )
+            .animation(.easeInOut.delay(1) , value: gradientCol)
             
-            Button("Tap me"){
-                enabled.toggle()
-            }.frame(width: 200, height: 200)
-                .background(enabled ? .blue : .red)
-                .animation(nil, value: enabled)
-                .foregroundStyle(.white)
-                .clipShape(.rect(cornerRadius: enabled ? 60 : 0))
-                .animation(.spring(duration: 1, bounce: 0.6), value: enabled)
-            
-            
-            Button("Tap me"){
-                degree = 360.0
-                color = .red
-            }
-            .padding(30)
-            .background(color)
-            .foregroundColor(.blue)
-            .clipShape(.capsule)
-            .rotation3DEffect(.degrees(degree), axis: (x: 0.0, y: 1.0, z: 0.0))
-            .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true), value: degree)
-            
-            Button("Tap me"){
-                
-            }.padding(30)
-                .background(.red)
-                .foregroundColor(.white)
-                .clipShape(.capsule)
-                .overlay(
-                    Capsule()
-                        .stroke(.red)
-                        .scaleEffect(animationValue)
-                        .opacity(1.5 - animationValue)
-                        .animation(.easeInOut(duration: 2)
-                            .repeatForever(autoreverses: false), value: animationValue)
-                )
-                .onAppear(perform: {
-                    animationValue = 1.5
-                })
-        }
     }
 }
 
