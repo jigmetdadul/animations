@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var gradientCol = false
     @State private var dragAmount = CGSize.zero
+    @State private var viewToggle = false
     var body: some View {
         LinearGradient(colors: [ gradientCol ? .purple : .green, .orange], startPoint: .topLeading, endPoint: .bottomTrailing)
             .frame(width: 300, height: 200)
@@ -37,6 +38,20 @@ struct ContentView: View {
             )
             .animation(.easeInOut.delay(1) , value: gradientCol)
             
+        Button("Present new view"){
+            withAnimation {
+                viewToggle.toggle()
+            }
+        }
+        .buttonBorderShape(.capsule).buttonStyle(.borderedProminent).tint(.green)
+        
+        if viewToggle{
+            Rectangle()
+                .frame(width: 300, height: 200)
+                .clipShape(.rect(cornerRadius: 20))
+                .transition(.scale)
+        }
+        
     }
 }
 
