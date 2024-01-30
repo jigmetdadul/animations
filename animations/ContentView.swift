@@ -7,6 +7,23 @@
 
 import SwiftUI
 
+
+struct cornerRotateModifier: ViewModifier{
+    let amount:Double
+    let anchor:UnitPoint
+    
+    func body(content: Content) -> some View {
+         content
+            .rotationEffect(.degrees(amount), anchor: anchor)
+             
+    }
+}
+
+extension AnyTransition{
+    static var pivot: AnyTransition{
+        .modifier(active: cornerRotateModifier(amount: -90, anchor: .topLeading), identity: cornerRotateModifier(amount: 0, anchor: .topLeading))
+    }
+}
 struct ContentView: View {
     @State private var gradientCol = false
     @State private var dragAmount = CGSize.zero
@@ -49,7 +66,7 @@ struct ContentView: View {
             Rectangle()
                 .frame(width: 300, height: 200)
                 .clipShape(.rect(cornerRadius: 20))
-                .transition(.scale)
+                .transition(.pivot)
         }
         
     }
